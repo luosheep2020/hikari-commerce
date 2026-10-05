@@ -2,17 +2,16 @@ package com.hikaricommerce.mall.product.controller;
 
 import com.hikaricommerce.mall.common.result.ApiResponse;
 import com.hikaricommerce.mall.common.result.PageResult;
-import com.hikaricommerce.mall.product.dto.BrandQuery;
+import com.hikaricommerce.mall.product.dto.BrandPageRequest;
+import com.hikaricommerce.mall.product.dto.BrandSaveRequest;
 import com.hikaricommerce.mall.product.service.BrandService;
 import com.hikaricommerce.mall.product.vo.BrandVO;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/brand")
+@RestController
+@RequestMapping("/api/admin/brand")
 public class BrandController {
   @Resource
   private BrandService brandService;
@@ -24,8 +23,31 @@ public class BrandController {
 
   @GetMapping
   public ApiResponse<PageResult<BrandVO>> pageBrands(
-    @Valid @ModelAttribute BrandQuery query) {
+    @Valid @ModelAttribute BrandPageRequest request
+  ) {
+    return ApiResponse.success(brandService.pageBrands(request));
+  }
 
-    return ApiResponse.success(brandService.pageBrands(query));
+  @PostMapping
+  public ApiResponse<Void> createBrand(
+    @Valid @RequestBody BrandSaveRequest request
+  ) {
+    brandService.createBrand(request);
+    return ApiResponse.success();
+  }
+
+  @PutMapping("/{id}")
+  public ApiResponse<Void> updateBrand(
+    @PathVariable Long id,
+    @Valid @RequestBody BrandSaveRequest request
+  ) {
+    brandService.updateBrand(id, request);
+    return ApiResponse.success();
+  }
+
+  @DeleteMapping("/{id}")
+  public ApiResponse<Void> deleteBrand(@PathVariable Long id) {
+    brandService.deleteBrand(id);
+    return ApiResponse.success();
   }
 }

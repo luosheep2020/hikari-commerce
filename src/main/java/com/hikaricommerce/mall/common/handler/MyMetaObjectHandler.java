@@ -1,28 +1,32 @@
 package com.hikaricommerce.mall.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 // java example
-@Slf4j
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 
   @Override
   public void insertFill(MetaObject metaObject) {
-    log.info("开始插入填充...");
-    this.strictInsertFill(metaObject, "createUserId", Long.class, 123456L);
-    this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+    LocalDateTime now = LocalDateTime.now();
+
+    strictInsertFill(
+      metaObject, "createTime", LocalDateTime.class, now
+    );
+    strictInsertFill(
+      metaObject, "updateTime", LocalDateTime.class, now
+    );
   }
 
   @Override
   public void updateFill(MetaObject metaObject) {
-    log.info("开始更新填充...");
-    this.strictInsertFill(metaObject, "updateUserId", Long.class, 123456L);
-    this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
+    // 覆盖从数据库读取出来的旧更新时间
+    setFieldValByName(
+      "updateTime", LocalDateTime.now(), metaObject
+    );
   }
 }
