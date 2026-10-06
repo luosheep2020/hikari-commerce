@@ -12,5 +12,5 @@ public interface CategoryService {
   public Category getCategoryById(Long id);
   public void createCategory(CategorySaveRequest request);
   public void updateCategory(Long id,CategorySaveRequest request);
-  public void deleteBrand(Long id);
+  public void deleteCategory(Long id);
 }

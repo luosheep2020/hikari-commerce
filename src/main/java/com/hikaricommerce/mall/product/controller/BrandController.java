@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/admin/brand")
 public class BrandController {
+
   @Resource
   private BrandService brandService;
 
   @GetMapping("/{id}")
-  public ApiResponse<BrandVO> getBrandById(@PathVariable Long id){
+  public ApiResponse<BrandVO> getBrandById(@PathVariable Long id) {
     return ApiResponse.success(brandService.getBrandById(id));
   }
 

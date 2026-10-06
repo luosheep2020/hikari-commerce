@@ -61,6 +61,39 @@ public enum ErrorCode {
   CATEGORY_HIERARCHY_INVALID(
     11008, "Category hierarchy is invalid",
     HttpStatus.INTERNAL_SERVER_ERROR
+  ),
+  // SPU
+  SPU_NOT_FOUND(
+    12001, "Product not found", HttpStatus.NOT_FOUND
+  ),
+  SPU_HAS_SKUS(
+    12002, "Product has associated SKUs", HttpStatus.CONFLICT
+  ),
+  SPU_MUST_BE_OFF_SHELF(
+    12003, "Product must be taken off shelf before deletion",
+    HttpStatus.CONFLICT
+  ),
+  SPU_HAS_NO_SKUS(
+    12004, "Product must have at least one SKU before being put on shelf",
+    HttpStatus.CONFLICT
+  ),
+
+  // SKU
+  SKU_NOT_FOUND(
+    13001, "SKU not found", HttpStatus.NOT_FOUND
+  ),
+  SKU_SN_ALREADY_EXISTS(
+    13002, "SKU code already exists", HttpStatus.CONFLICT
+  ),
+  SKU_SPEC_ALREADY_EXISTS(
+    13003, "SKU specification combination already exists for this product",
+    HttpStatus.CONFLICT
+  ),
+  SKU_STOCK_INSUFFICIENT(
+    13004, "Insufficient SKU stock", HttpStatus.CONFLICT
+  ),
+  SKU_HAS_LOCKED_STOCK(
+    13005, "SKU has locked stock", HttpStatus.CONFLICT
   );
 
   private final int code;

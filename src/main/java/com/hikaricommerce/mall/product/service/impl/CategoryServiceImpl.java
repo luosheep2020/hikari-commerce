@@ -14,6 +14,7 @@ import com.hikaricommerce.mall.product.vo.CategoryTreeVO;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -69,7 +70,11 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public Category getCategoryById(Long id) {
-    return categoryRepository.getById(id);
+    Category category=categoryRepository.getById(id);
+    if (category==null){
+      throw new BusinessException(ErrorCode.CATEGORY_NOT_FOUND);
+    }
+    return category;
   }
 
   @Override
@@ -134,16 +139,25 @@ public class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
-  public void deleteBrand(Long id) {
-    boolean hasProducts = spuRepository.exists(
-      new LambdaQueryWrapper<Spu>()
-        .eq(Spu::getBrandId, id)
-    );
-
-    if (hasProducts) {
-      throw new BusinessException(ErrorCode.BRAND_HAS_PRODUCTS);
+  public void deleteCategory(Long id) {
+    Category category=categoryRepository.getById(id);
+    if (category==null){
+      throw new BusinessException(ErrorCode.CATEGORY_NOT_FOUND);
     }
-
+    boolean hasChildren=categoryRepository.exists(
+      new LambdaQueryWrapper<Category>()
+        .eq(Category::getParentId,id)
+    );
+    if (hasChildren){
+      throw new BusinessException(ErrorCode.CATEGORY_HAS_CHILDREN);
+    }
+    boolean hasProducts=spuRepository.exists(
+      new LambdaQueryWrapper<Spu>()
+        .eq(Spu::getCategoryId, id)
+    );
+    if (hasProducts){
+      throw new BusinessException(ErrorCode.CATEGORY_HAS_PRODUCTS);
+    }
     brandRepository.removeById(id);
   }
 
